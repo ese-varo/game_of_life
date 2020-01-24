@@ -1,25 +1,24 @@
 class Cell
   attr_accessor :new_state
   attr_reader :symbol
+  attr_writer :alive
 
   def initialize
-    @symbols = {alive: "@", dead: "-"}
+    @show = {alive: "@", dead: "-"}
     @alive = false
     @new_state = false
     @symbol = "-" 
-  end
-
-  def alive=(value)
-    @current_state = value
-    current_state ? symbol = symbols[:alive] : symbol = symbols[:dead]
   end
 
   def alive?
     @alive
   end
 
+  def symbol=(value)
+    @symbol = show[value] 
+  end
+
   private
 
-  attr_reader :symbols
-  attr_writer :symbol
+  attr_reader :show
 end

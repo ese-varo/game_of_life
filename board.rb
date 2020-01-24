@@ -15,7 +15,7 @@ class Board
 
   def print_matrix
     matrix.each do |row|
-      row.each { |cell| print cell.symbol }
+      row.each { |cell| select_symbol(cell) }
       print "\n"
     end
   end
@@ -27,4 +27,9 @@ class Board
   private 
 
   attr_writer :matrix
+
+  def select_symbol(cell)
+    cell.alive? ? cell.symbol = :alive : cell.symbol = :dead
+    print cell.symbol
+  end
 end
