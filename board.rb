@@ -56,4 +56,28 @@ class Board
     determine_new_state(count) 
   end
 
+  def determine_new_state(neighbors)
+    
+  end
+
+  def top_row(x, y)
+    x, y = x - 1, y - 1
+    counter = 0
+    3.times { |i| counter += is_alive(x, y - i) if exists?(x, y - i) }
+    counter
+  end
+
+  def mid_row(x, y)
+    counter = 0
+    counter += is_alive(x, y - 1) if exists?(x, y - 1)
+    counter += is_alive(x, y + 1) if exists?(x, y + 1)
+    counter
+  end
+
+  def bottom_row(x, y)
+    x, y = x + 1, y - 1
+    counter = 0
+    3.times { |i| counter += is_alive(x, y + i) if exists?(x, y + i) }
+  end
+
 end
