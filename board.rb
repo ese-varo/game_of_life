@@ -88,4 +88,8 @@ class Board
     end
     true
   end
+
+  def is_alive(x, y)
+    matrix[x][y].alive? ? 1 : 0
+  end
 end
