@@ -80,4 +80,12 @@ class Board
     3.times { |i| counter += is_alive(x, y + i) if exists?(x, y + i) }
   end
 
+  def exists?(x, y)
+    if x < 0 || matrix[x].nil?
+      return false
+    elsif y < 0 || matrix[x][y].nil?
+      return false
+    end
+    true
+  end
 end
