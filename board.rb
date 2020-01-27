@@ -44,8 +44,13 @@ class Board
 
   def validate_cells
     matrix.each_with_index do |row, x|
-      row.each_with_index { |cell, y| count_neighbors(x, y) }
+      row.each_with_index { |cell, y| determine_new_state(x, y) }
     end
+  end
+
+  def determine_new_state(x, y)
+    neighbors = count_neighbors(x, y)
+    matrix[x][y].new_state = apply_rules(x, y, neighbors)
   end
 
   def count_neighbors(x, y)
@@ -53,11 +58,16 @@ class Board
     count += top_row(x, y)
     count += mid_row(x, y)
     count += bottom_row(x, y)
-    determine_new_state(count) 
+    count
   end
 
-  def determine_new_state(neighbors)
-    
+  def apply_rules(x, y, neighbors)
+    if matrix[x][y].alive? 
+      return true if neighbors > 1 && neighbors < 4
+    else
+      return true if neighbors == 3
+    end
+    false
   end
 
   def top_row(x, y)
