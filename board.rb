@@ -1,5 +1,5 @@
 class Board
-  PERCENTAGE = 3
+  PERCENTAGE = 28
   attr_reader :size, :matrix
 
   def initialize(size)
@@ -13,6 +13,8 @@ class Board
       size.times { |y| matrix[x][y] = Cell.new }
     end
     random_selection
+    # init_blinker
+    # init_toad
   end
 
   def print_matrix
@@ -80,7 +82,7 @@ class Board
   def top_row(x, y)
     x, y = x - 1, y - 1
     counter = 0
-    3.times { |i| counter += is_alive(x, y - i) if exists?(x, y - i) }
+    3.times { |i| counter += is_alive(x, y + i) if exists?(x, y + i) }
     counter
   end
 
@@ -95,6 +97,7 @@ class Board
     x, y = x + 1, y - 1
     counter = 0
     3.times { |i| counter += is_alive(x, y + i) if exists?(x, y + i) }
+    counter
   end
 
   def exists?(x, y)
@@ -108,5 +111,19 @@ class Board
 
   def is_alive(x, y)
     matrix[x][y].alive? ? 1 : 0
+  end
+
+  # methods to fill the board with known patterns
+  def init_toad
+    x, iy = 2, 2
+    2.times do  
+      3.times { |y| matrix[x][y + iy].alive = true}
+      x += 1
+      iy -= 1
+    end
+  end
+
+  def init_blinker
+    3.times { |y| matrix[2][y + 1].alive = true }
   end
 end

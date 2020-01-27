@@ -8,7 +8,11 @@ require_relative "cell"
 
 def play_game
   puts "Please enter the number of rows for creating the board: "
-  board = Board.new(gets.chomp.to_i)
+  size = gets.chomp.to_i 
+  size > 2 ? board = Board.new(size) : play_game
+  # blinker_size = 5
+  # toad_size = 6
+  # board = Board.new(blinker_size)
   board.fill
   while true
     board.print_matrix
