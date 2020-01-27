@@ -1,5 +1,5 @@
 class Board
-  PERCENTAGE = 0.01
+  PERCENTAGE = 3
   attr_reader :size, :matrix
 
   def initialize(size)
@@ -16,13 +16,13 @@ class Board
   end
 
   def print_matrix
-    validate_cells
     system "clear"
     matrix.each do |row|
       row.each { |cell| select_symbol(cell) }
       print "\n"
     end
     puts "Press \"ctrl + z\" to quit the game "
+    validate_cells
   end
 
   private 
@@ -35,7 +35,7 @@ class Board
   end
 
   def random_selection
-    ((size ** 2) * PERCENTAGE).to_i.times do 
+    ((size ** 2) * (PERCENTAGE * 0.01)).to_i.times do 
       x = rand(0..(size - 1))
       y = rand(0..(size - 1))
       matrix[x][y].alive = true
@@ -45,6 +45,13 @@ class Board
   def validate_cells
     matrix.each_with_index do |row, x|
       row.each_with_index { |cell, y| determine_new_state(x, y) }
+    end
+    set_new_state
+  end
+
+  def set_new_state
+    size.times do |x|
+      size.times { |y| matrix[x][y].alive = matrix[x][y].new_state }
     end
   end
 
