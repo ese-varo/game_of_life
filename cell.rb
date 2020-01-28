@@ -1,4 +1,6 @@
 class Cell
+  SHOW = { alive: '@', dead: '-' }.freeze
+
   attr_accessor :new_state
   attr_reader :symbol
   attr_writer :alive
@@ -6,7 +8,7 @@ class Cell
   def initialize
     @alive = false
     @new_state = false
-    @symbol = "-" 
+    @symbol = '-'
   end
 
   def alive?
@@ -14,10 +16,6 @@ class Cell
   end
 
   def symbol=(value)
-    @symbol = SHOW[value] 
+    @symbol = SHOW[value]
   end
-
-  private
-
-  SHOW = {alive: "@", dead: "-"}
 end

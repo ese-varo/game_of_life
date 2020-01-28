@@ -18,35 +18,37 @@ class Board
   end
 
   def print_matrix
-    system "clear"
+    system 'clear'
     matrix.each do |row|
       row.each { |cell| select_symbol(cell) }
       print "\n"
     end
-    puts "Press \"ctrl + z\" to quit the game "
+    puts 'Press \"ctrl + z\" to quit the game '
     validate_cells
   end
 
-  private 
+  private
 
   attr_writer :matrix
 
   def select_symbol(cell)
-    cell.alive? ? cell.symbol = :alive : cell.symbol = :dead
+    cell.symbol = cell.alive? ? :alive : :dead
     print "#{cell.symbol} "
   end
 
   def random_selection
-    ((size ** 2) * (PERCENTAGE * 0.01)).to_i.times do 
-      x = rand(0..(size - 1))
-      y = rand(0..(size - 1))
-      matrix[x][y].alive = true
-    end
+    (size**2 * (PERCENTAGE * 0.01)).to_i.times { live_cells }
+  end
+
+  def live_cells
+    x = rand(0..(size - 1))
+    y = rand(0..(size - 1))
+    matrix[x][y].alive = true
   end
 
   def validate_cells
     matrix.each_with_index do |row, x|
-      row.each_with_index { |cell, y| determine_new_state(x, y) }
+      row.each_with_index { |_cell, y| determine_new_state(x, y) }
     end
     set_new_state
   end
@@ -57,67 +59,73 @@ class Board
     end
   end
 
-  def determine_new_state(x, y)
-    neighbors = count_neighbors(x, y)
-    matrix[x][y].new_state = apply_rules(x, y, neighbors)
+  def determine_new_state(x_ind, y_ind)
+    neighbors = count_neighbors(x_ind, y_ind)
+    matrix[x_ind][y_ind].new_state = apply_rules(x_ind, y_ind, neighbors)
   end
 
-  def count_neighbors(x, y)
+  def count_neighbors(x_index, y_index)
     count = 0
-    count += top_row(x, y)
-    count += mid_row(x, y)
-    count += bottom_row(x, y)
+    count += top_row(x_index, y_index)
+    count += mid_row(x_index, y_index)
+    count += bottom_row(x_index, y_index)
     count
   end
 
-  def apply_rules(x, y, neighbors)
-    if matrix[x][y].alive? 
+  def apply_rules(x_index, y_index, neighbors)
+    if matrix[x_index][y_index].alive?
       return true if neighbors > 1 && neighbors < 4
-    else
-      return true if neighbors == 3
+    elsif neighbors == 3
+      return true
     end
+
     false
   end
 
-  def top_row(x, y)
-    x, y = x - 1, y - 1
+  def top_row(x_index, y_index)
+    x_index -= 1
+    y_index -= 1
     counter = 0
-    3.times { |i| counter += is_alive(x, y + i) if exists?(x, y + i) }
-    counter
-  end
-
-  def mid_row(x, y)
-    counter = 0
-    counter += is_alive(x, y - 1) if exists?(x, y - 1)
-    counter += is_alive(x, y + 1) if exists?(x, y + 1)
-    counter
-  end
-
-  def bottom_row(x, y)
-    x, y = x + 1, y - 1
-    counter = 0
-    3.times { |i| counter += is_alive(x, y + i) if exists?(x, y + i) }
-    counter
-  end
-
-  def exists?(x, y)
-    if x < 0 || matrix[x].nil?
-      return false
-    elsif y < 0 || matrix[x][y].nil?
-      return false
+    3.times do |i|
+      counter += dead?(x_index, y_index + i) if exists?(x_index, y_index + i)
     end
+    counter
+  end
+
+  def mid_row(x_index, y_index)
+    counter = 0
+    counter += dead?(x_index, y_index - 1) if exists?(x_index, y_index - 1)
+    counter += dead?(x_index, y_index + 1) if exists?(x_index, y_index + 1)
+    counter
+  end
+
+  def bottom_row(x_index, y_index)
+    x_index += 1
+    y_index -= 1
+    counter = 0
+    3.times do |i|
+      counter += dead?(x_index, y_index + i) if exists?(x_index, y_index + i)
+    end
+    counter
+  end
+
+  def exists?(x_index, y_index)
+    return false if x_index.negative? || matrix[x_index].nil?
+    return false if y_index.negative? || matrix[x_index][y_index].nil?
+
     true
   end
 
-  def is_alive(x, y)
-    matrix[x][y].alive? ? 1 : 0
+  def dead?(x_index, y_index)
+    matrix[x_index][y_index].alive? ? 1 : 0
   end
 
   # methods to fill the board with known patterns
   def init_toad
-    x, iy = 2, 2
-    2.times do  
-      3.times { |y| matrix[x][y + iy].alive = true}
+    x = 2
+    iy = 2
+    2.times do
+      3.times { |y| matrix[x][y + iy].alive = true }
       x += 1
       iy -= 1
     end
