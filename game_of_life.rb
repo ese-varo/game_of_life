@@ -13,7 +13,7 @@ def play_game
   # blinker_size = 5
   # toad_size = 6
   # board = Board.new(blinker_size)
-  board.fill
+  board.random_selection
   loop do
     board.print_matrix
     sleep 1

@@ -1,5 +1,5 @@
 class Cell
-  SHOW = { alive: '@', dead: '-' }.freeze
+  SHOW = { alive: "⬤", dead: " " }.freeze
 
   attr_accessor :new_state
   attr_reader :symbol

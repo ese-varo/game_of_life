@@ -1,10 +1,10 @@
 class Board
-  PERCENTAGE = 28
+  PERCENTAGE = 10
   attr_reader :size, :matrix
 
   def initialize(size)
     @size = size
-    @matrix = []
+    @matrix = Array.new(size){ Array.new(size) { Cell.new } }
   end
 
   def fill
@@ -13,8 +13,10 @@ class Board
       size.times { |y| matrix[x][y] = Cell.new }
     end
     random_selection
-    # init_blinker
-    # init_toad
+  end
+
+  def random_selection
+    (size**2 * (PERCENTAGE * 0.01)).to_i.times { live_cells }
   end
 
   def print_matrix
@@ -34,10 +36,6 @@ class Board
   def select_symbol(cell)
     cell.symbol = cell.alive? ? :alive : :dead
     print "#{cell.symbol} "
-  end
-
-  def random_selection
-    (size**2 * (PERCENTAGE * 0.01)).to_i.times { live_cells }
   end
 
   def live_cells
@@ -118,20 +116,5 @@ class Board
 
   def dead?(x_index, y_index)
     matrix[x_index][y_index].alive? ? 1 : 0
-  end
-
-  # methods to fill the board with known patterns
-  def init_toad
-    x = 2
-    iy = 2
-    2.times do
-      3.times { |y| matrix[x][y + iy].alive = true }
-      x += 1
-      iy -= 1
-    end
-  end
-
-  def init_blinker
-    3.times { |y| matrix[2][y + 1].alive = true }
   end
 end
